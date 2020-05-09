@@ -60,11 +60,16 @@ def echo(update, context):
         chat_id, text)
 
 
-def webhook(updater):
+def use_webhook(updater):
     updater.start_webhook(listen="0.0.0.0",
                           port=PORT,
                           url_path=BOT_TOKEN)
     updater.bot.set_webhook(HEROKU_BOT_URL + BOT_TOKEN)
+    updater.idle()
+
+
+def use_polling(updater):
+    updater.start_polling()
     updater.idle()
 
 
@@ -75,7 +80,7 @@ def main():
     dp.add_handler(CommandHandler('start', start))
     echo_handler = MessageHandler(Filters.text & (~Filters.command), echo)
     dp.add_handler(echo_handler)
-    webhook(updater)
+    use_webhook(updater)
 
 
 if __name__ == '__main__':
