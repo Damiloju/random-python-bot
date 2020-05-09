@@ -133,8 +133,8 @@ def main():
     dp.add_handler(CommandHandler('inspire', inspire_me))
     echo_handler = MessageHandler(Filters.text & (~Filters.command), echo)
     dp.add_handler(echo_handler)
-    # use_webhook(updater)
-    use_polling(updater)
+    use_webhook(updater)
+    # use_polling(updater)
 
 
 if __name__ == '__main__':
