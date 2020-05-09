@@ -62,7 +62,7 @@ def echo(update, context):
     chat_id = update.effective_chat.id
     user = update.message.from_user
     logger.info("User %s is interacted with bot.", user.first_name)
-    text = get_current_time() + "/n" + update.message.text
+    text = get_current_time() + "\n" + update.message.text
     context.bot.send_message(
         chat_id, text)
 
