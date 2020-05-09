@@ -11,10 +11,12 @@ load_dotenv()
 
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-logging.basicConfig(filename="main.log", filemode='a', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+HEROKU_BOT_URL = os.getenv("HEROKU_BOT_URL")
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
 
 logger = logging.getLogger(__name__)
+PORT = int(os.environ.get('PORT', '8443'))
 
 
 def get_url():
@@ -58,6 +60,14 @@ def echo(update, context):
         chat_id, text)
 
 
+def webhook(updater):
+    updater.start_webhook(listen="0.0.0.0",
+                          port=PORT,
+                          url_path=BOT_TOKEN)
+    updater.bot.set_webhook(HEROKU_BOT_URL + BOT_TOKEN)
+    updater.idle()
+
+
 def main():
     updater = Updater(token=BOT_TOKEN, use_context=True)
     dp = updater.dispatcher
@@ -65,8 +75,7 @@ def main():
     dp.add_handler(CommandHandler('start', start))
     echo_handler = MessageHandler(Filters.text & (~Filters.command), echo)
     dp.add_handler(echo_handler)
-    updater.start_polling()
-    updater.idle()
+    webhook(updater)
 
 
 if __name__ == '__main__':
