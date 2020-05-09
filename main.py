@@ -11,8 +11,10 @@ load_dotenv()
 
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+logging.basicConfig(filename="main.log", filemode='a', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
+
+logger = logging.getLogger(__name__)
 
 
 def get_url():
@@ -33,11 +35,15 @@ def get_image_url():
 def bop(update, context):
     url = get_image_url()
     chat_id = update.effective_chat.id
+    user = update.message.from_user
+    logger.info("User %s requested for a dog picture.", user.first_name)
     context.bot.send_photo(chat_id=chat_id, photo=url)
 
 
 def start(update, context):
     chat_id = update.effective_chat.id
+    user = update.message.from_user
+    logger.info("User %s started the conversation.", user.first_name)
     text = "I can send you random cute dog images!, just send /bop command."
     context.bot.send_message(
         chat_id, text)
@@ -45,6 +51,8 @@ def start(update, context):
 
 def echo(update, context):
     chat_id = update.effective_chat.id
+    user = update.message.from_user
+    logger.info("User %s is interacted with bot.", user.first_name)
     text = update.message.text
     context.bot.send_message(
         chat_id, text)
