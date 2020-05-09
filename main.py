@@ -1,4 +1,5 @@
 import os
+import random
 from datetime import datetime
 import telegram
 from telegram.ext import Updater, CommandHandler
@@ -39,6 +40,14 @@ def get_simpson_quote():
     return contents[0]
 
 
+def get_random_quote():
+    contents = requests.get(
+        'https://type.fit/api/quotes').json()
+    array_len = len(contents)
+    random_number = random.randint(1, array_len)
+    return contents[random_number]
+
+
 def get_image_url():
     allowed_extension = ['jpg', 'jpeg', 'png']
     file_extension = ''
@@ -54,6 +63,18 @@ def bop(update, context):
     user = update.message.from_user
     logger.info("User %s requested for a dog picture.", user.first_name)
     context.bot.send_photo(chat_id=chat_id, photo=url)
+
+
+def inspire_me(update, context):
+    contents = get_random_quote()
+    quote = contents['text']
+    quote_author = contents['author']
+    chat_id = update.effective_chat.id
+    user = update.message.from_user
+    logger.info("User %s requested for a random quote.", user.first_name)
+    text = "<i>" + quote + "</i>" + "\n" + "<b>" + " - " + quote_author + "</b>"
+    context.bot.send_message(
+        chat_id, text, parse_mode=telegram.ParseMode.HTML)
 
 
 def inspire_me_simpson(update, context):
@@ -84,7 +105,8 @@ def echo(update, context):
     chat_id = update.effective_chat.id
     user = update.message.from_user
     logger.info("User %s is interacted with bot.", user.first_name)
-    text = get_current_time() + "\n\n" + "<pre>" + update.message.text + "</pre>"
+    text = get_current_time() + "\n\n" + "<b>" + "You said" + "</b>" + \
+        "\n" + "<i>" + update.message.text + "</i>"
     context.bot.send_message(
         chat_id, text, parse_mode=telegram.ParseMode.HTML)
 
@@ -108,11 +130,11 @@ def main():
     dp.add_handler(CommandHandler('bop', bop))
     dp.add_handler(CommandHandler('start', start))
     dp.add_handler(CommandHandler('simpson', inspire_me_simpson))
-    dp.add_handler(CommandHandler('inspire', inspire_me_simpson))
+    dp.add_handler(CommandHandler('inspire', inspire_me))
     echo_handler = MessageHandler(Filters.text & (~Filters.command), echo)
     dp.add_handler(echo_handler)
-    use_webhook(updater)
-    # use_polling(updater)
+    # use_webhook(updater)
+    use_polling(updater)
 
 
 if __name__ == '__main__':
