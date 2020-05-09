@@ -74,7 +74,8 @@ def start(update, context):
     chat_id = update.effective_chat.id
     user = update.message.from_user
     logger.info("User %s started the conversation.", user.first_name)
-    text = "I can send you random cute dog images!, just send /bop command."
+    text = "Hello " + user.first_name + \
+        ", welcome you can send any of the following commands send /bop /inspire /simpson to see what I can do."
     context.bot.send_message(
         chat_id, text)
 
@@ -83,9 +84,9 @@ def echo(update, context):
     chat_id = update.effective_chat.id
     user = update.message.from_user
     logger.info("User %s is interacted with bot.", user.first_name)
-    text = get_current_time() + "\n\n" + update.message.text
+    text = get_current_time() + "\n\n" + "<pre>" + update.message.text + "</pre>"
     context.bot.send_message(
-        chat_id, text)
+        chat_id, text, parse_mode=telegram.ParseMode.HTML)
 
 
 def use_webhook(updater):
@@ -106,7 +107,8 @@ def main():
     dp = updater.dispatcher
     dp.add_handler(CommandHandler('bop', bop))
     dp.add_handler(CommandHandler('start', start))
-    dp.add_handler(CommandHandler('inspire_me_simpson', inspire_me_simpson))
+    dp.add_handler(CommandHandler('simpson', inspire_me_simpson))
+    dp.add_handler(CommandHandler('inspire', inspire_me_simpson))
     echo_handler = MessageHandler(Filters.text & (~Filters.command), echo)
     dp.add_handler(echo_handler)
     use_webhook(updater)
