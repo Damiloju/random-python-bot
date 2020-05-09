@@ -1,4 +1,4 @@
-# Project Title
+# Dongun Bot
 
 This is a play around telegram bot I created for myself. It sends inspiration quotes using `https://type.fit/api/quotes`, also sends fun Simpsons quotes from the TV series using an api created by [Jason Luboff](https://www.freecodecamp.org/forum/u/jluboff/summary) `https://thesimpsonsquoteapi.glitch.me/quotes`. It additional uses `https://random.dog/woof.json` to send random pictures.
 
