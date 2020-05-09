@@ -1,5 +1,6 @@
 import os
 from datetime import datetime
+import telegram
 from telegram.ext import Updater, CommandHandler
 import logging
 import re
@@ -32,6 +33,12 @@ def get_url():
     return url
 
 
+def get_simpson_quote():
+    contents = requests.get(
+        'https://thesimpsonsquoteapi.glitch.me/quotes').json()
+    return contents[0]
+
+
 def get_image_url():
     allowed_extension = ['jpg', 'jpeg', 'png']
     file_extension = ''
@@ -49,6 +56,20 @@ def bop(update, context):
     context.bot.send_photo(chat_id=chat_id, photo=url)
 
 
+def inspire_me_simpson(update, context):
+    contents = get_simpson_quote()
+    img_url = contents['image']
+    quote = contents['quote']
+    character = contents['character']
+    chat_id = update.effective_chat.id
+    user = update.message.from_user
+    logger.info("User %s requested for a simpson quote.", user.first_name)
+    context.bot.send_photo(chat_id=chat_id, photo=img_url)
+    text = "<b>" + character + "</b>" + "\n" + "<pre>" + quote + "</pre>"
+    context.bot.send_message(
+        chat_id, text, parse_mode=telegram.ParseMode.HTML)
+
+
 def start(update, context):
     chat_id = update.effective_chat.id
     user = update.message.from_user
@@ -62,7 +83,7 @@ def echo(update, context):
     chat_id = update.effective_chat.id
     user = update.message.from_user
     logger.info("User %s is interacted with bot.", user.first_name)
-    text = get_current_time() + "\n" + update.message.text
+    text = get_current_time() + "\n\n" + update.message.text
     context.bot.send_message(
         chat_id, text)
 
@@ -85,9 +106,11 @@ def main():
     dp = updater.dispatcher
     dp.add_handler(CommandHandler('bop', bop))
     dp.add_handler(CommandHandler('start', start))
+    dp.add_handler(CommandHandler('inspire_me_simpson', inspire_me_simpson))
     echo_handler = MessageHandler(Filters.text & (~Filters.command), echo)
     dp.add_handler(echo_handler)
     use_webhook(updater)
+    # use_polling(updater)
 
 
 if __name__ == '__main__':
