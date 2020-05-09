@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from telegram.ext import Updater, CommandHandler
 import logging
 import re
@@ -17,6 +18,12 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 PORT = int(os.environ.get('PORT', '8443'))
+
+
+def get_current_time():
+    now = datetime.now()
+    current_time = now.strftime("%d %B, %Y %I:%S %p")
+    return current_time
 
 
 def get_url():
@@ -55,7 +62,7 @@ def echo(update, context):
     chat_id = update.effective_chat.id
     user = update.message.from_user
     logger.info("User %s is interacted with bot.", user.first_name)
-    text = update.message.text
+    text = get_current_time() + "/n" + update.message.text
     context.bot.send_message(
         chat_id, text)
 
