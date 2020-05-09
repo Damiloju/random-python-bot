@@ -52,7 +52,6 @@ def echo(update, context):
 
 def main():
     updater = Updater(token=BOT_TOKEN, use_context=True)
-    # updater = Updater(BOT_TOKEN)
     dp = updater.dispatcher
     dp.add_handler(CommandHandler('bop', bop))
     dp.add_handler(CommandHandler('start', start))
