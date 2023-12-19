@@ -31,7 +31,7 @@ Contributions are closed
 
 ## Authors
 
-* **Damiloju** - *Initial work* - [PurpleBooth](https://github.com/Damiloju)
+* **Damiloju** - *Initial work* - [Damiloju](https://github.com/Damiloju)
 
 See also the list of [contributors](https://github.com/Damiloju/dongun-telegram-bot/graphs/contributors) who participated in this project.
 

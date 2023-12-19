@@ -2,3 +2,4 @@
 main.log
 *__pycache__
 .vscode
+.history
